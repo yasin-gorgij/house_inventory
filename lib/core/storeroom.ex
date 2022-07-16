@@ -1,39 +1,43 @@
 defmodule HouseInventory.Core.Storeroom do
   @enforce_keys [:name]
-  defstruct [:name, items: []]
+  defstruct [:name, items: %{}]
 
-  alias HouseInventory.Core.Item
-
-  def new(fields) do
-    struct!(__MODULE__, fields)
+  @doc """
+  Creates a Storeroom by getting its name
+  """
+  def new(name) do
+    %__MODULE__{
+      name: name
+    }
   end
 
-  def update_name(storeroom, new_name) do
+  def change_name(storeroom, new_name) do
     %{storeroom | name: new_name}
   end
 
-  def add_item(storeroom, item) do
-    %{storeroom | items: [item | storeroom.items]}
+  def add_item(storeroom, item_name, item_stock) do
+    new_items = Map.put(storeroom.items, item_name, item_stock)
+    %{storeroom | items: new_items}
   end
 
-  def update_item_name(storeroom, item, new_name) do
-    new_item = Item.update(item, {:name, new_name})
-    update_storeroom_item(storeroom, item, new_item)
+  def get_item(storeroom, item_name) do
+    Map.get(storeroom.items, item_name, "Item doesn't exist")
   end
 
-  def update_item_stock(storeroom, item, new_stock) do
-    new_item = Item.update(item, {:stock, new_stock})
-    update_storeroom_item(storeroom, item, new_item)
+  def change_item_name(storeroom, current_name, new_name) do
+    current_stock = Map.get(storeroom.items, current_name)
+    new_items = Map.delete(storeroom.items, current_name)
+    storeroom = %{storeroom | items: new_items}
+    add_item(storeroom, new_name, current_stock)
   end
 
-  def delete_item(storeroom, item) do
-    items = List.delete(storeroom.items, item)
-    %{storeroom | items: items}
+  def update_item_stock(storeroom, item_name, new_stock) do
+    new_items = Map.update!(storeroom.items, item_name, fn _ -> new_stock end)
+    %{storeroom | items: new_items}
   end
 
-  defp update_storeroom_item(storeroom, old_item, new_item) do
-    storeroom
-    |> delete_item(old_item)
-    |> add_item(new_item)
+  def delete_item(storeroom, item_name) do
+    new_items = Map.delete(storeroom.items, item_name)
+    %{storeroom | items: new_items}
   end
 end
