@@ -1,4 +1,4 @@
-defmodule HouseInventory.Service.StoreroomService do
+defmodule HouseInventory.Boundary.StoreroomService do
   alias HouseInventory.Core.Storeroom
   use GenServer
 

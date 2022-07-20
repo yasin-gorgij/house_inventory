@@ -1,20 +1,18 @@
 defmodule HouseInventory do
-  alias HouseInventory.Service.StoreroomService
-  @service StoreroomService
+  @moduledoc """
+  Documentation for `HouseInventory`.
+  """
 
-  def create(storeroom_name) do
-    GenServer.start_link(@service, storeroom_name)
-  end
+  @doc """
+  Hello world.
 
-  def edit_name(new_name) do
-    GenServer.call(@service, {:edit_name, new_name})
-  end
+  ## Examples
 
-  def add_item(name, stock) do
-    GenServer.call(@service, {:add_item, name, stock})
-  end
+      iex> HouseInventory.hello()
+      :world
 
-  def get_items() do
-    GenServer.call(@service, {:items})
+  """
+  def hello do
+    :world
   end
 end
