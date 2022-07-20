@@ -6,21 +6,28 @@ defmodule HouseInventory.Service.StoreroomService do
     GenServer.start(__MODULE__, storeroom_name)
   end
 
+  def edit_name(new_name) do
+    GenServer.call(__MODULE__, {:edit_name, new_name})
+  end
+
+  def add_item(name, stock) do
+    GenServer.call(__MODULE__, {:add_item, name, stock})
+  end
+
+  def get_items() do
+    GenServer.call(__MODULE__, {:items})
+  end
+
   @impl true
-  def init(storeroom_name) when is_binary(storeroom_name) do
+  def init(storeroom_name) do
     {:ok, Storeroom.new(storeroom_name)}
   end
 
   @impl true
-  def init(_) do
-    {:error, "Storeroom name must be string"}
-  end
-
-  @impl true
-  def handle_call({:change_name, new_name}, _from, storeroom) do
+  def handle_call({:edit_name, new_name}, _from, storeroom) do
     new_storeroom =
       storeroom
-      |> Storeroom.change_name(new_name)
+      |> Storeroom.edit_name(new_name)
 
     {:reply, :ok, new_storeroom}
   end

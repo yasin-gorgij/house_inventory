@@ -14,7 +14,7 @@ defmodule HouseInventoryTest do
     end
 
     test "change storeroom name" do
-      storeroom = Storeroom.change_name(@downstairs, "Upstairs")
+      storeroom = Storeroom.edit_name(@downstairs, "Upstairs")
 
       assert storeroom.name == "Upstairs"
     end

@@ -11,7 +11,7 @@ defmodule HouseInventory.Core.Storeroom do
     }
   end
 
-  def change_name(storeroom, new_name) do
+  def edit_name(storeroom, new_name) do
     %{storeroom | name: new_name}
   end
 
