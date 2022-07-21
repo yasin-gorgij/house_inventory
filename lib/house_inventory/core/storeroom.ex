@@ -1,13 +1,6 @@
 defmodule HouseInventory.Core.Storeroom do
   defstruct items: %{}
 
-  @doc """
-   Returns a new Storeroom
-  """
-  def new() do
-    %__MODULE__{}
-  end
-
   def add_item(storeroom, item_name, item_stock) do
     new_items = Map.put(storeroom.items, item_name, item_stock)
     %{storeroom | items: new_items}

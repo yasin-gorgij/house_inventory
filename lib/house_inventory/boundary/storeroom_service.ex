@@ -15,8 +15,8 @@ defmodule HouseInventory.Boundary.StoreroomService do
   end
 
   @impl true
-  def init(_) do
-    {:ok, %{}}
+  def init(storeroom \\ %Storeroom{}) do
+    {:ok, storeroom}
   end
 
   @impl true
