@@ -2,10 +2,6 @@ defmodule HouseInventory.Boundary.StoreroomService do
   alias HouseInventory.Core.Storeroom
   use GenServer
 
-  def start(storeroom_name) do
-    GenServer.start(__MODULE__, storeroom_name)
-  end
-
   def edit_name(new_name) do
     GenServer.call(__MODULE__, {:edit_name, new_name})
   end
@@ -19,17 +15,20 @@ defmodule HouseInventory.Boundary.StoreroomService do
   end
 
   @impl true
-  def init(storeroom_name) do
-    {:ok, Storeroom.new(storeroom_name)}
+  def init(_) do
+    {:ok, %{}}
   end
 
   @impl true
-  def handle_call({:edit_name, new_name}, _from, storeroom) do
-    new_storeroom =
-      storeroom
-      |> Storeroom.edit_name(new_name)
+  #def handle_call({:create, name}, _from, storeroom) do
+  #  {:ok, Storeroom.new(name)}
+  #end
 
-    {:reply, :ok, new_storeroom}
+  @impl true
+  def handle_call({:edit_name, new_name}, _from, storeroom) do
+  
+
+    {:reply, :ok, storeroom}
   end
 
   @impl true

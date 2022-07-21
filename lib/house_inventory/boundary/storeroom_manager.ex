@@ -2,28 +2,53 @@ defmodule HouseInventory.Boundary.StoreroomManager do
   alias HouseInventory.Core.Storeroom
   use GenServer
 
-  def start(storerooms \\ []) do
-    GenServer.start_link(__MODULE__, storerooms, name: __MODULE__)
-  end
-
-  def add_storeroom(name) when is_binary(name) do
-    GenServer.call(__MODULE__, {:add, name})
+  def create_storeroom(name) when is_binary(name) do
+    GenServer.call(__MODULE__, {:create, name})
   end
 
   def delete_storeroom(name) when is_binary(name) do
     GenServer.call(__MODULE__, {:delete, name})
   end
 
+  def get_storerooms do
+    GenServer.call(__MODULE__, {:storerooms})
+  end
+
+  def edit_storeroom_name(current_name, new_name) do
+    GenServer.call(__MODULE__, {:edit_name, current_name, new_name})
+  end
+
   @impl true
-  def init(storerooms \\ []) do
+  def init(storerooms) do
     {:ok, storerooms}
   end
 
   @impl true
-  def handle_call({:edit_name, new_name}, _from, storeroom) do
-    new_storeroom =
-      storeroom
-      |> Storeroom.edit_name(new_name)
+  def handle_call({:create, name}, _from, storerooms) do
+    new_storeroom = name |> Storeroom.new()
+    new_storerooms = storerooms |> Map.put(name, new_storeroom)
+
+    {:reply, :ok, new_storerooms}
+  end
+
+  @impl true
+  def handle_call({:delete, name}, _from, storerooms) do
+    new_storerooms = Map.delete(storerooms, name)
+
+    {:reply, :ok, new_storerooms}
+  end
+
+  @impl true
+  def handle_call({:storerooms}, _from, storerooms) do
+    names = Map.keys(storerooms)
+
+    {:reply, names, storerooms}
+  end
+
+  @impl true
+  def handle_call({:edit_name, current_name, new_name}, _from, storerooms) do
+    storeroom = storerooms |> Map.get(current_name)
+    new_storeroom = storeroom |> Storeroom.edit_name(new_name)
 
     {:reply, :ok, new_storeroom}
   end
